@@ -234,7 +234,6 @@ Private Function BrowseFolderPath() As String
             BrowseFolderPath = ""
         End If
     End With
-    Set fileExplorer = Nothing
 err:
     Set fileExplorer = Nothing
     Exit Function
