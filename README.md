@@ -64,3 +64,19 @@ There are several dependencies from the [`three.js`](https://github.com/mrdoob/t
 The above will need to be changed depending on where the site saves its assets. All of the above `JavaScript` files are required for the 3D display to function correctly. The `stlviewer.js` file is part of this repository. The other files are part of the [`three.js`](https://github.com/mrdoob/three.js/) library. The `stlviewer.js` file is based on code by [tonyb486](https://github.com/tonyb486/stlviewer). 
 
 ![image.png](image.png)
+
+## Excel HTML Generator ##
+The included macro enabled excel file can be used to automatically generate `.html` files with the correct `yaml` front matter and `html` code. The Visual Basic for Applications (`VBA`) code can be edited to allow for the use of the correct names for the included `JavaScript` files.
+
+![image2.png](image2.png)
+
+#### Edit `JavaScript` File Paths in `VBA` Module ####
+``` vba
+Option Explicit
+
+Private Const WEBGL_JS As String = "/assets/js/webgl.min.js"
+Private Const THREE_JS As String = "/assets/js/three.min.js"
+Private Const STL_LOADER_JS As String = "/assets/js/stlloader.min.js"
+Private Const ORBIT_CONTROL_JS As String = "/assets/js/orbitcontrols.min.js"
+Private Const STL_VIEWER_JS As String = "/assets/js/stlviewer.js"
+```
