@@ -1,0 +1,80 @@
+---
+layout: default
+---
+
+    <!--- threed.html -->
+            <style type="text/css">
+                div.stlviewer {
+                    height: 400px;
+                }
+
+                #loading {
+                    width: 100%;
+                    height: 40px;
+                    top: 300px;
+                    left: 0px;
+                    position: absolute;
+                    display: inline-block;
+                    opacity: 0.7;
+                    z-index: 1;
+                    text-align: center;
+                }
+            </style>
+
+            <h2>
+                {%- if page.p_title -%}
+                <label>{{ page.p_title }}</label>
+                {%- endif -%}
+                <span style="float:right;">
+                    <label style="margin-left: 40px"> </label>
+                    <input type="checkbox" id="c1" name="cntrl"/><label for="c1">orbit</label>
+                    <label style="margin-left: 40px"> </label>
+                    <input type="radio" id="r1" name="model"/><label for="r1">wire</label>
+                    <label style="margin-left: 20px"> </label>
+                    <input type="radio" id="r2" name="model"/><label for="r1">shaded</label>
+                </span>
+            </h2>
+
+            <div style="width: 100%; text-align: center;">
+                <div id="loading">
+                    <img id="loading-image" src="{{ site.url }}/assets/images/svg/spinner.svg" alt="Loading..." height="80px" width="80px"/>
+                </div>
+                <div class=stlviewer data-src="{{ site.url }}{{ page.m_filepath }}{{ page.m_filename }}.stl" data-value="{{ page.d_value }}">
+                    <canvas id="glcanvas" width="740" height="400"></canvas>
+                </div><br>
+            </div>
+
+            {%- if page.m_description -%}
+            <p>
+                Description: {{ page.m_description }}
+            </p>
+            {%- endif -%}
+
+            <p>
+                {{ content }}
+            </p>
+
+            {%- if page.m_cost -%}
+            <p>
+                Cost of Materials: ~{{ page.m_cost }}
+            </p>
+            {%- endif -%}
+
+            <p>
+                <label>3D Files</label>
+                {% for type in page.m_filetypes %}
+                    <br>
+                    <a href="{{ site.url }}{{ page.m_filepath }}{{ page.m_filename }}.{{ type.filetype }}">{{ page.m_filename }}.{{ type.filetype }}</a>
+                {% endfor %}
+            </p>
+
+            <script src="{{ site.url }}/assets/js/webgl.min.js"></script>
+            <script src="{{ site.url }}/assets/js/three.min.js"></script>
+            <script src="{{ site.url }}/assets/js/stlloader.min.js"></script>
+            <script src="{{ site.url }}/assets/js/orbitcontrols.min.js"></script>
+            <script src="{{ site.url }}/assets/js/stlviewer.js"></script>
+            <script type=text/javascript>
+                window.onload = function() {
+                    STLViewerEnable("stlviewer");
+                }
+            </script>
