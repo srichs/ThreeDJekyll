@@ -33,14 +33,20 @@
  *
  * @author srichs
  */
+
 "use strict";
+
 var canvas, camera, renderer, scene;
 var distScale;
-var ambientLight, hemiLight;
+var ambientLight, hemiLight, hemiLight2;
 var controls;
 var element, model;
 var mesh1, mesh2;
 var orbiting = true;
+
+const bgColor = 0x181818; //light 0xffffff / dark 0x181818
+const solidColor = 0x448ead; //blue 0x448ead
+const edgeColor = 0xbbbbbb; //light 0x000000 / dark 0xbbbbbb
 
 /** This function is called to change the material of the object when the radio
  * button is selected for the other option. */
@@ -57,6 +63,7 @@ function doMaterialChange(modelType) {
             mesh = mesh1;
         } else if (modelType == 2) {
             scene.add(hemiLight);
+            scene.add(hemiLight2);
             scene.add(mesh2);
             mesh = mesh2;
         }
@@ -74,7 +81,7 @@ function doMaterialChange(modelType) {
  * for the wireframe and shaded options. */
 function initObject() {
     var material1 = new THREE.MeshPhongMaterial({
-        color: 0xffffff,
+        color: bgColor,
         opacity: 0.85,
         transparent: true,
         polygonOffset: true,
@@ -82,32 +89,29 @@ function initObject() {
         polygonOffsetUnits: 1
     });
     var material2 = new THREE.MeshPhongMaterial({
-        color: 0x448ead,
-        specular: 0x448ead,
+        color: solidColor,
+        specular: solidColor,
         shininess: 100.0,
     });
-    (new THREE.STLLoader()).load(model, function(geometry) {
+    var manager = new THREE.LoadingManager();
+    manager.onLoad = function () {
+        document.getElementById("loading").style.display = "none";
+    };
+    (new THREE.STLLoader(manager)).load(model, function(geometry) {
         mesh2 = new THREE.Mesh(geometry, material2);
         mesh2.geometry.computeFaceNormals();
         mesh2.geometry.computeVertexNormals();
         scene.add(mesh2);
-        /*var geo = new THREE.EdgesGeometry(mesh2.geometry); // or WireframeGeometry
-        var mat = new THREE.LineBasicMaterial({
-            color: 0x000000,
-            linewidth: 1
-        });
-        var outline = new THREE.LineSegments(geo, mat);
-        mesh2.add(outline);*/
         scene.remove(mesh2);
     });
-    (new THREE.STLLoader()).load(model, function(geometry) {
+    (new THREE.STLLoader(manager)).load(model, function(geometry) {
         mesh1 = new THREE.Mesh(geometry, material1);
         mesh1.geometry.computeFaceNormals();
         mesh1.geometry.computeVertexNormals();
         scene.add(mesh1);
         var geo = new THREE.EdgesGeometry(mesh1.geometry); // or WireframeGeometry
         var mat = new THREE.LineBasicMaterial({
-            color: 0x000000,
+            color: edgeColor,
             linewidth: 2
         });
         var outline = new THREE.LineSegments(geo, mat);
@@ -210,16 +214,19 @@ function initScene() {
 
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
-    controls.rotateSpeed = 1.0;
+    controls.rotateSpeed = 0.1;
     controls.dampingFactor = 0.1;
     controls.enableZoom = true;
     controls.enablePan = false;
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = 8.0;
+    controls.autoRotate = orbiting;
+    controls.autoRotateSpeed = 1.0;
 
     scene = new THREE.Scene();
 
     ambientLight = new THREE.AmbientLight(0xffffff);
     hemiLight = new THREE.HemisphereLight(0xffffff, 0x080820, 1.5);
+    hemiLight.position.z = 2;
+    hemiLight = new THREE.HemisphereLight(0xffffff, 0x080820, 1.5);
+    hemiLight.position.x = 2;
     scene.add(ambientLight);
 }
